@@ -1,101 +1,158 @@
 const helper = require('./helper.js');
 const React = require('react');
+const { toast, ToastContainer } = require('react-toastify');
+require("react-toastify/dist/ReactToastify.css");
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
-const handleDomo = (e, onDomoAdded) => {
+const handleItem = (e, onItemAdded) => {
     e.preventDefault();
-    helper.hideError();
 
-    const name = e.target.querySelector("#domoName").value;
-    const age = e.target.querySelector("#domoAge").value;
-    const phrase = e.target.querySelector("#domoPhrase").value;
+    const name = e.target.querySelector("#itemName").value;
+    const description = e.target.querySelector("#itemDescription").value;
+    const startingPrice = e.target.querySelector("#itemPrice").value;
 
-    if (!name || !age || !phrase) {
-        helper.handleError("All Fields are required!");
+    if (!name || !description || !startingPrice) {
+        toast.error("All Fields are required!");
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age, phrase }, onDomoAdded);
+    helper.sendPost(e.target.action, { name, description, startingPrice }, onItemAdded);
     return false;
 }
 
-const DomoForm = (props) => {
+const ItemForm = (props) => {
     return (
-        <form id='domoForm'
-            onSubmit={(e) => handleDomo(e, props.triggerReload)}
-            name='domoForm'
+        <form id='itemForm'
+            onSubmit={(e) => handleItem(e, props.triggerReload)}
+            name='itemForm'
             action="/maker"
             method='POST'
-            className='domoForm'
+            className='itemForm'
         >
 
-            <label htmlFor="name">Name:</label>
-            <input type="text" id='domoName' name='name' placeholder='Domo Name' />
-            <label htmlFor="age">Age:</label>
-            <input type="number" name="age" id="domoAge" min="0" />
-            <label htmlFor="phrase">Phrase:</label>
-            <input type="text" id='domoPhrase' name='phrase' placeholder='Domo Catchphrase' />
-            <input type="submit" className='makeDomoSubmit' value="Make Domo" />
+            <label htmlFor="name">Item Name:</label>
+            <input type="text" id='itemName' name='name' placeholder='Item Name' />
+
+            <label htmlFor="description">Description:</label>
+            <input type="text" id='itemDescription' name='description' placeholder='Item Description' />
+
+            <label htmlFor="price">Starting Price:</label>
+            <input type="number" id="itemPrice" name="startingPrice" min="1" />
+
+            <input type="submit" className='makeItemSubmit' value="Create Item" />
         </form>
     );
 }
 
-const DomoList = (props) => {
-    const [domos, setDomos] = React.useState(props.domos);
+const ItemList = (props) => {
+    const [items, setItems] = React.useState(props.items);
+    const [bidValues, setBidValues] = useState({});
 
-    const deleteDomoHandler = async (id) => {
-        await helper.sendPost('/deleteDomo', { id });
+    const handleBid = async (itemId, amount) => {
+        await helper.sendPost('/placeBid', { itemId, amount });
         props.triggerReload();
     }
 
-    useEffect(() => {
-        const loadDomosFromServer = async () => {
-            const res = await fetch('/getDomos');
-            const data = await res.json();
-            setDomos(data.domos);
-        };
-        loadDomosFromServer();
-    }, [props.reloadDomos]);
+    const deleteItemHandler = async (id) => {
+        await helper.sendPost('/deleteItem', { id });
+        props.triggerReload();
+    }
 
-    if (domos.length === 0) {
+    const handleBidChange = (id, value) => {
+        setBidValues(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const getTimeLeft = (expiredTime) => {
+        //5 min timer from the model
+        //Change it there
+        const diff = new Date(expiredTime) - new Date();
+
+        if (diff <= 0) return "Expired";
+
+        const minutes = Math.floor(diff / 1000 / 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        return `${minutes}m ${seconds}s`;
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setItems(prev => [...prev]);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        const loadItemsFromServer = async () => {
+            const res = await fetch('/getItems');
+            const data = await res.json();
+            setItems(data.items);
+        };
+        loadItemsFromServer();
+    }, [props.reloadItems]);
+
+    if (items.length === 0) {
         return (
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos yet!</h3>
+            <div className="itemList">
+                <h3 className="emptyItem">No Items yet!</h3>
             </div>
         )
     }
 
-    const domoNodes = domos.map(domo => {
+    const itemNodes = items.map(item => {
         return (
-            <div key={domo._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="domoName">Name: {domo.name}</h3>
-                <h3 className="domoAge">Age: {domo.age}</h3>
-                <h3 className="domoPhrase">Phrase: {domo.phrase}</h3>
+            <div key={item._id} className="item">
+                <h3 className="itemName">Name: {item.name}</h3>
+                <h3 className="itemDesc">Description: {item.description}</h3>
+                <h3 className="itemPrice">Current Price: ${item.currentPrice}</h3>
+                <h3>Time Left: {getTimeLeft(item.expiredTime)}</h3>
 
-                <button className='deleteDomo' onClick={() => deleteDomoHandler(domo._id)}>Delete</button>
+                <input
+                    type="number"
+                    placeholder="Enter bid"
+                    value={bidValues[item._id] || ''}
+                    onChange={(e) => handleBidChange(item._id, e.target.value)}
+                />
+
+                <button className='bid-btn' disabled={!bidValues[item._id]} onClick={() =>
+                    handleBid(item._id, (bidValues[item._id]))
+                }>Place Bid</button>
+
+                <button className='delete-btn' onClick={() => deleteItemHandler(item._id)}>
+                    Delete
+                </button>
             </div>
         );
     });
+
     return (
-        <div className='domoList'>
-            {domoNodes}
+        <div className='itemList'>
+            {itemNodes}
         </div>
     )
 }
 
 const App = () => {
-    const [reloadDomos, setReloadDomos] = useState(false);
+    const [reloadItems, setReloadItems] = useState(false);
 
     return (
         <div>
-            <div id='makeDomo'>
-                <DomoForm triggerReload={() => setReloadDomos(!reloadDomos)} />
+            <div id='makeItem'>
+                <ItemForm triggerReload={() => setReloadItems(!reloadItems)} />
             </div>
-            <div id='domos'>
-                <DomoList domos={[]} reloadDomos={reloadDomos} triggerReload={() => setReloadDomos(!reloadDomos)}/>
+            <div id='items'>
+                <ItemList
+                    items={[]}
+                    reloadItems={reloadItems}
+                    triggerReload={() => setReloadItems(!reloadItems)}
+                />
             </div>
+            <ToastContainer />
         </div>
     );
 };

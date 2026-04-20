@@ -1,16 +1,17 @@
 const helper = require('./helper.js');
+const { toast, ToastContainer } = require('react-toastify');
+require("react-toastify/dist/ReactToastify.css");
 const React = require('react');
 const { createRoot } = require('react-dom/client');
 
 const handleLogin = (e) => {
     e.preventDefault();
-    helper.hideError();
 
     const username = e.target.querySelector('#user').value;
     const pass = e.target.querySelector('#pass').value;
 
     if (!username || !pass) {
-        helper.handleError('Username or password is empty!');
+        toast.error('Username or password is empty!');
         return false;
     }
 
@@ -20,19 +21,18 @@ const handleLogin = (e) => {
 
 const handleSignup = (e) => {
     e.preventDefault();
-    helper.hideError();
 
     const username = e.target.querySelector('#user').value;
     const pass = e.target.querySelector('#pass').value;
     const pass2 = e.target.querySelector('#pass2').value;
 
     if (!username || !pass || !pass2) {
-        helper.handleError('All fields are required!');
+        toast.error('All fields are required!');
         return false;
     }
 
     if (pass !== pass2) {
-        helper.handleError('Password do not match!');
+        toast.error('Passwords do not match!');
         return false;
     }
 
@@ -49,7 +49,7 @@ const LoginWindow = (props) => {
             method="POST"
             className="mainForm"
         >
-            <label htmlFor='"username'>Username:</label>
+            <label htmlFor='username'>Username:</label>
             <input id="user" type="text" name='username' placeholder='username' />
             <label htmlFor="pass">Password:</label>
             <input type="password" name="pass" id="pass" placeholder="password" />
@@ -67,7 +67,7 @@ const SignupWindow = (props) => {
             method="POST"
             className="mainForm"
         >
-            <label htmlFor='"username'>Username</label>
+            <label htmlFor='username'>Username</label>
             <input id="user" type="text" name='username' placeholder='username' />
             <label htmlFor="pass">Password:</label>
             <input type="password" name="pass" id="pass" placeholder="password" />
@@ -86,17 +86,17 @@ const init = () => {
 
     loginButton.addEventListener('click', (e) => {
         e.preventDefault();
-        root.render(<LoginWindow />);
+        root.render(<><LoginWindow /> <ToastContainer /> </>);
         return false;
     });
 
     signupButton.addEventListener('click', (e) => {
         e.preventDefault();
-        root.render(<SignupWindow />)
+        root.render(<><SignupWindow /> <ToastContainer /> </>)
         return false;
     });
 
-    root.render(<LoginWindow />);
+    root.render(<><LoginWindow /> <ToastContainer/> </>);
 };
 
 window.onload = init;

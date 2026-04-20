@@ -1,5 +1,5 @@
 {
-  "name": "domomaker",
+  "name": "auctionhouse",
   "version": "1.0.0",
   "description": "A Simple Login Example using Node.js, Mongo and Redis",
   "main": "./server/app.js",
@@ -30,6 +30,7 @@
     "express-session": "^1.18.2",
     "helmet": "^8.1.0",
     "mongoose": "^8.19.3",
+    "react-toastify": "^11.0.5",
     "redis": "^5.9.0",
     "serve-favicon": "^2.5.1",
     "underscore": "^1.13.7"
@@ -39,11 +40,13 @@
     "@babel/preset-react": "^7.28.5",
     "@eslint/js": "^10.0.1",
     "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "nodemon": "^3.1.10",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "style-loader": "^4.0.0",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1"
   }

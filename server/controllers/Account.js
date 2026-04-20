@@ -11,8 +11,8 @@ const logout = (req, res) => {
 };
 
 const login = (req, res) => {
-    const username = `${req.body.username}`;
-    const pass = `${req.body.pass}`;
+    const username = req.body.username;
+    const pass = req.body.pass;
 
     if (!username || !pass) {
         return res.status(400).json({ error: 'All fields are required!' });
@@ -30,9 +30,9 @@ const login = (req, res) => {
 };
 
 const signup = async (req, res) => {
-    const username = `${req.body.username}`;
-    const pass = `${req.body.pass}`;
-    const pass2 = `${req.body.pass2}`;
+    const username = req.body.username;
+    const pass = req.body.pass;
+    const pass2 = req.body.pass2;
 
     if (!username || !pass || !pass2) {
         return res.status(400).json({ error: 'All fields are required!' });
