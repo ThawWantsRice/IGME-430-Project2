@@ -17,6 +17,7 @@ const sendPost = async (url, data, handler) => {
 
   if (result.error) {
     toast.error(result.error);
+    return;
   }
 
   toast.success('Success');
