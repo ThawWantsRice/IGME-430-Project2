@@ -39,6 +39,6 @@ const FileSchema = new mongoose.Schema({
 });
 
 // Finally we construct a model based on our schema above.
-const FileModel = mongoose.model('FileModel', FileSchema);
+const FileModel = mongoose.model('File', FileSchema);
 
 module.exports = FileModel;

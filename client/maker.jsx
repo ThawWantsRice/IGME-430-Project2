@@ -126,7 +126,7 @@ const ItemList = (props) => {
         return (
             <div key={item._id} className="item">
                 <h3 className="itemName">Name: {item.name}</h3>
-                {item.imageId ? (<img src={`/retrieve?_id=${item.imageId}`} alt="item" width={150} />):null}
+                {item.imageId ? (<img src={`/retrieve?_id=${item.imageId}`} alt="item" width={150} />) : null}
                 <h3 className="itemDesc">Description: {item.description}</h3>
                 <h3 className="itemPrice">Current Price: ${item.currentPrice}</h3>
                 <h3>Time Left: {getTimeLeft(item.expiredTime)}</h3>
@@ -156,6 +156,49 @@ const ItemList = (props) => {
     )
 }
 
+const handlePasswordChange = (e) => {
+    e.preventDefault();
+
+    const currentPass = e.target.querySelector('#currentPass').value;
+    const newPass = e.target.querySelector('#newPass').value;
+    const newPass2 = e.target.querySelector('#newPass2').value;
+
+    if (!currentPass || !newPass || !newPass2) {
+        toast.error('All fields are required!');
+        return false;
+    }
+
+    if (newPass !== newPass2) {
+        toast.error('Passwords do not match!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, { currentPass, newPass, newPass2 });
+    return false;
+}
+
+const ChangePasswordWindow = (props) => {
+    return (
+        <div className='infoBox'>
+            <h3 className='infoBoxHead'>Password Change Form</h3>
+            <form id="changePasswordForm"
+                name="changePasswordForm"
+                onSubmit={handlePasswordChange}
+                action="/changePassword"
+                method="POST"
+                className="mainForm"
+            >
+                <label htmlFor='username'>Current Password:</label>
+                <input type="password" id="currentPass" type="text" name='currentPass' placeholder='current Password' />
+                <label htmlFor="pass">New Password:</label>
+                <input type="password" name="newPass" id="newPass" placeholder="New Password" />
+                <label htmlFor='pass'>Reenter Password:</label>
+                <input type="password" name="newPass2" id="newPass2" placeholder="Retype New Password" />
+                <input type="submit" className="formSubmit" value="Change Password" />
+            </form></div>
+    )
+}
+
 const App = () => {
     const [reloadItems, setReloadItems] = useState(false);
 
@@ -177,8 +220,17 @@ const App = () => {
 };
 
 const init = () => {
+    const changePasswordButton = document.getElementById('changePassword');
+
     const root = createRoot(document.getElementById('app'));
-    root.render(<App />);
+
+    changePasswordButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            root.render(<><ChangePasswordWindow /> <ToastContainer /> </>);
+            return false;
+        });
+
+    root.render(<><App /></>);
 };
 
 window.onload = init;

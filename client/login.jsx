@@ -42,7 +42,7 @@ const handleSignup = (e) => {
 
 const LoginWindow = (props) => {
     return (
-        <form id="loginForm"
+        <div className='infoBox'><form id="loginForm"
             name="loginForm"
             onSubmit={handleLogin}
             action="/login"
@@ -54,13 +54,13 @@ const LoginWindow = (props) => {
             <label htmlFor="pass">Password:</label>
             <input type="password" name="pass" id="pass" placeholder="password" />
             <input type="submit" className="formSubmit" value="Sign in" />
-        </form>
+        </form></div>
     );
 };
 
 const SignupWindow = (props) => {
     return (
-        <form id="signupForm"
+        <div className='infoBox'><form id="signupForm"
             name="signupForm"
             onSubmit={handleSignup}
             action="/signup"
@@ -74,7 +74,7 @@ const SignupWindow = (props) => {
             <label htmlFor='pass'>Password:</label>
             <input type="password" name="pass2" id="pass2" placeholder="retype password" />
             <input type="submit" className="formSubmit" value="Sign up" />
-        </form>
+        </form></div>
     );
 };
 
@@ -96,7 +96,7 @@ const init = () => {
         return false;
     });
 
-    root.render(<><LoginWindow /> <ToastContainer/> </>);
+    root.render(<><LoginWindow /> <ToastContainer /> </>);
 };
 
 window.onload = init;
