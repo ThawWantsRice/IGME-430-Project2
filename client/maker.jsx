@@ -19,7 +19,7 @@ const handleItem = (e, onItemAdded) => {
 
     fetch('/maker', {
         method: 'POST',
-        body: formData,
+        body: new FormData(e.target),
     }).then(res => res.json()).then((result) => {
         if (result.error) {
             toast.error(result.error);
@@ -126,7 +126,7 @@ const ItemList = (props) => {
         return (
             <div key={item._id} className="item">
                 <h3 className="itemName">Name: {item.name}</h3>
-                <img src={`/retrieve?_id=${item.imageId}`} alt="item" width={150}/>
+                {item.imageId ? (<img src={`/retrieve?_id=${item.imageId}`} alt="item" width={150} />):null}
                 <h3 className="itemDesc">Description: {item.description}</h3>
                 <h3 className="itemPrice">Current Price: ${item.currentPrice}</h3>
                 <h3>Time Left: {getTimeLeft(item.expiredTime)}</h3>
@@ -139,7 +139,7 @@ const ItemList = (props) => {
                 />
 
                 <button className='bid-btn' disabled={!bidValues[item._id]} onClick={() =>
-                    handleBid(item._id, (bidValues[item._id]), this.reset())
+                    handleBid(item._id, (bidValues[item._id]))
                 }>Place Bid</button>
 
                 <button className='delete-btn' onClick={() => deleteItemHandler(item._id)}>

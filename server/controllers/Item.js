@@ -46,7 +46,7 @@ const makeItem = async (req, res) => {
         currentPrice: req.body.startingPrice,
         owner: req.session.account._id,
         expiredTime: new Date(Date.now() + 5 * 60 * 1000), //5 min test also milliseconds
-        imageID: fileId,
+        imageId: fileId,
     };
 
     try {
@@ -58,7 +58,7 @@ const makeItem = async (req, res) => {
             description: newItem.description,
             currentPrice: newItem.currentPrice,
             expiredTime: newItem.expiredTime,
-            imageID: fileId,
+            imageId: fileId,
         });
     } catch (err) {
         console.log(err);

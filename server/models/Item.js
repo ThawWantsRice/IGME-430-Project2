@@ -21,7 +21,7 @@ const ItemSchema = new mongoose.Schema({
     currentPrice: {
         type: Number,
     },
-    image: {
+    imageId: {
         type: mongoose.Schema.ObjectId,
         ref: 'File'
     },
