@@ -74,7 +74,7 @@ const changePassword = async (req, res) => {
     try {
         const account = await Account.findById(req.session.account._id);
 
-        const checkPass = await Account.authenticate(account.username, currentPass, async(err, user) => {
+        await Account.authenticate(account.username, currentPass, async(err, user) => {
             if (err || !user) {
                 return res.status(401).json({ error: 'Current password incorrect!' });
             }
@@ -87,7 +87,7 @@ const changePassword = async (req, res) => {
 
             return res.json({ redirect: '/maker' });
         });
-    } catch (err) {
+    } catch{
         return res.status(500).json({ error: 'An error occurred!' });
     }
 }
