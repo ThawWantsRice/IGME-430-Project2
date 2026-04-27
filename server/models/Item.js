@@ -21,6 +21,10 @@ const ItemSchema = new mongoose.Schema({
     currentPrice: {
         type: Number,
     },
+    image: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'File'
+    },
     bids: [
         {
             bidder: {

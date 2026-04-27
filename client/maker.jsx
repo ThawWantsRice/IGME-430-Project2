@@ -17,7 +17,21 @@ const handleItem = (e, onItemAdded) => {
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, description, startingPrice }, onItemAdded);
+    fetch('/maker', {
+        method: 'POST',
+        body: formData,
+    }).then(res => res.json()).then((result) => {
+        if (result.error) {
+            toast.error(result.error);
+            return;
+        }
+        toast.success("Item created!");
+        onItemAdded();
+        e.target.reset();
+    }).catch(err => {
+        console.error(err);
+        toast.error("Upload failed");
+    });
     return false;
 }
 
@@ -29,6 +43,7 @@ const ItemForm = (props) => {
             action="/maker"
             method='POST'
             className='itemForm'
+            encType="multipart/form-data"
         >
 
             <label htmlFor="name">Item Name:</label>
@@ -39,6 +54,9 @@ const ItemForm = (props) => {
 
             <label htmlFor="price">Starting Price:</label>
             <input type="number" id="itemPrice" name="startingPrice" min="1" />
+
+            <label htmlFor="file">Upload File</label>
+            <input type="file" name="image" accept="image/*" />
 
             <input type="submit" className='makeItemSubmit' value="Create Item" />
         </form>
@@ -108,6 +126,7 @@ const ItemList = (props) => {
         return (
             <div key={item._id} className="item">
                 <h3 className="itemName">Name: {item.name}</h3>
+                <img src={`/retrieve?_id=${item.imageId}`} alt="item" width={150}/>
                 <h3 className="itemDesc">Description: {item.description}</h3>
                 <h3 className="itemPrice">Current Price: ${item.currentPrice}</h3>
                 <h3>Time Left: {getTimeLeft(item.expiredTime)}</h3>
@@ -120,7 +139,7 @@ const ItemList = (props) => {
                 />
 
                 <button className='bid-btn' disabled={!bidValues[item._id]} onClick={() =>
-                    handleBid(item._id, (bidValues[item._id]))
+                    handleBid(item._id, (bidValues[item._id]), this.reset())
                 }>Place Bid</button>
 
                 <button className='delete-btn' onClick={() => deleteItemHandler(item._id)}>

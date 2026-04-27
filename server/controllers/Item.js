@@ -1,5 +1,6 @@
 const models = require('../models');
 const Item = models.Item;
+const File = models.File;
 
 const makerPage = (req, res) => {
     return res.render('app');
@@ -8,7 +9,7 @@ const makerPage = (req, res) => {
 const getItems = async (req, res) => {
     try {
         const query = {};
-        const docs = await Item.find(query).select('name description currentPrice expiredTime').lean().exec();
+        const docs = await Item.find(query).select('name description currentPrice expiredTime imageId').lean().exec();
 
         return res.json({ items: docs });
     } catch (err) {
@@ -22,13 +23,30 @@ const makeItem = async (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
+    let fileId;
+
+    if (req.files && req.files.image) {
+        const file = req.files.image;
+
+        const newFile = new File({
+            name: file.name,
+            data: file.data,
+            size: file.size,
+            mimetype: file.mimetype,
+        });
+
+        const savedFile = await newFile.save();
+        fileId = savedFile._id;
+    }
+
     const itemData = {
         name: req.body.name,
         description: req.body.description,
         startingPrice: req.body.startingPrice,
         currentPrice: req.body.startingPrice,
         owner: req.session.account._id,
-        expiredTime: new Date(Date.now() + 5 * 60 * 1000) //5 min test also milliseconds
+        expiredTime: new Date(Date.now() + 5 * 60 * 1000), //5 min test also milliseconds
+        imageID: fileId,
     };
 
     try {
@@ -40,6 +58,7 @@ const makeItem = async (req, res) => {
             description: newItem.description,
             currentPrice: newItem.currentPrice,
             expiredTime: newItem.expiredTime,
+            imageID: fileId,
         });
     } catch (err) {
         console.log(err);

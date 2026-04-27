@@ -3,7 +3,8 @@ const mid = require('./middleware');
 
 const router = (app) => {
     app.get('/getItems', mid.requiresLogin, controllers.Item.getItems);
-    
+    app.get('/retrieve', controllers.File.retrieveFile);
+
     app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
     app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
 
@@ -18,8 +19,6 @@ const router = (app) => {
     app.post('/deleteItem', mid.requiresLogin, controllers.Item.deleteItem);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-
-    app.get('/*notFound', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 
 module.exports = router;

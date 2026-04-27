@@ -10,6 +10,8 @@ const session = require('express-session');
 const RedisStore = require('connect-redis').RedisStore;
 const redis = require('redis');
 
+const fileUpload = require('express-fileupload');
+
 const router = require('./router.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
@@ -42,6 +44,7 @@ app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(fileUpload());
 
 app.use(session({
     key: 'sessionid',
