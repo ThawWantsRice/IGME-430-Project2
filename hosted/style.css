@@ -68,6 +68,11 @@ nav {
     opacity: 0.9;
 }
 
+.warningCreate{
+    color: red;
+    font-size: small;
+}
+
 .itemList {
     display: grid;
     grid-template-columns: 250px 250px 250px;

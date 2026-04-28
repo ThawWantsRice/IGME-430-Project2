@@ -58,6 +58,7 @@ const ItemForm = (props) => {
             <label htmlFor="file">Upload File</label>
             <input type="file" name="image" accept="image/*" />
 
+            <h4 className='warningCreate'>All auction items have a 3% commission rate.</h4>
             <input type="submit" className='makeItemSubmit' value="Create Item" />
         </form>
     );
