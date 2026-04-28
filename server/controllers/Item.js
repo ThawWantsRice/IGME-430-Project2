@@ -25,6 +25,7 @@ const makeItem = async (req, res) => {
 
     let fileId;
 
+    // File stuff for imageId
     if (req.files && req.files.image) {
         const file = req.files.image;
 

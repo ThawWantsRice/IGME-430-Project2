@@ -180,7 +180,7 @@ const handlePasswordChange = (e) => {
 const ChangePasswordWindow = (props) => {
     return (
         <div className='infoBox'>
-            <h3 className='infoBoxHead'>Password Change Form</h3>
+            <h3 className='infoBoxHead'>Password Change</h3>
             <form id="changePasswordForm"
                 name="changePasswordForm"
                 onSubmit={handlePasswordChange}
@@ -189,11 +189,11 @@ const ChangePasswordWindow = (props) => {
                 className="mainForm"
             >
                 <label htmlFor='username'>Current Password:</label>
-                <input type="password" id="currentPass" type="text" name='currentPass' placeholder='current Password' />
+                <input type="password" id="currentPass" type="text" name='currentPass' placeholder='Current Password' />
                 <label htmlFor="pass">New Password:</label>
                 <input type="password" name="newPass" id="newPass" placeholder="New Password" />
-                <label htmlFor='pass'>Reenter Password:</label>
-                <input type="password" name="newPass2" id="newPass2" placeholder="Retype New Password" />
+                <label htmlFor='pass'>Re-enter Password:</label>
+                <input type="password" name="newPass2" id="newPass2" placeholder="Re-type New Password" />
                 <input type="submit" className="formSubmit" value="Change Password" />
             </form></div>
     )
@@ -201,12 +201,21 @@ const ChangePasswordWindow = (props) => {
 
 const App = () => {
     const [reloadItems, setReloadItems] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
     return (
         <div>
-            <div id='makeItem'>
-                <ItemForm triggerReload={() => setReloadItems(!reloadItems)} />
-            </div>
+            <button
+                onClick={() => setShowForm(!showForm)}
+                className="showFormBtn"
+            >
+                {showForm ? "Hide Form" : "Make Item"}
+            </button>
+            {showForm && (
+                <div id='makeItem'>
+                    <ItemForm triggerReload={() => setReloadItems(!reloadItems)} />
+                </div>
+            )}
             <div id='items'>
                 <ItemList
                     items={[]}
@@ -225,10 +234,10 @@ const init = () => {
     const root = createRoot(document.getElementById('app'));
 
     changePasswordButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            root.render(<><ChangePasswordWindow /> <ToastContainer /> </>);
-            return false;
-        });
+        e.preventDefault();
+        root.render(<><ChangePasswordWindow /> <ToastContainer /> </>);
+        return false;
+    });
 
     root.render(<><App /></>);
 };

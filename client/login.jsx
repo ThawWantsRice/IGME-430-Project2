@@ -42,7 +42,9 @@ const handleSignup = (e) => {
 
 const LoginWindow = (props) => {
     return (
-        <div className='infoBox'><form id="loginForm"
+        <div className='infoBox'>
+            <h3>Login</h3>
+            <form id="loginForm"
             name="loginForm"
             onSubmit={handleLogin}
             action="/login"
@@ -50,9 +52,9 @@ const LoginWindow = (props) => {
             className="mainForm"
         >
             <label htmlFor='username'>Username:</label>
-            <input id="user" type="text" name='username' placeholder='username' />
+            <input id="user" type="text" name='username' placeholder='Username' />
             <label htmlFor="pass">Password:</label>
-            <input type="password" name="pass" id="pass" placeholder="password" />
+            <input type="password" name="pass" id="pass" placeholder="Password" />
             <input type="submit" className="formSubmit" value="Sign in" />
         </form></div>
     );
@@ -60,7 +62,9 @@ const LoginWindow = (props) => {
 
 const SignupWindow = (props) => {
     return (
-        <div className='infoBox'><form id="signupForm"
+        <div className='infoBox'>
+            <h3 infoBoxHead>Sign Up</h3>
+            <form id="signupForm"
             name="signupForm"
             onSubmit={handleSignup}
             action="/signup"
@@ -68,11 +72,11 @@ const SignupWindow = (props) => {
             className="mainForm"
         >
             <label htmlFor='username'>Username</label>
-            <input id="user" type="text" name='username' placeholder='username' />
+            <input id="user" type="text" name='username' placeholder='Username' />
             <label htmlFor="pass">Password:</label>
-            <input type="password" name="pass" id="pass" placeholder="password" />
+            <input type="password" name="pass" id="pass" placeholder="Password" />
             <label htmlFor='pass'>Password:</label>
-            <input type="password" name="pass2" id="pass2" placeholder="retype password" />
+            <input type="password" name="pass2" id="pass2" placeholder="Re-type password" />
             <input type="submit" className="formSubmit" value="Sign up" />
         </form></div>
     );
